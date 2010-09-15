@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Webtasks example" default="init">
+	<description>Пример файла сборщика, использующий webtasks.xml </description>
+	<import file="webtasks.xml"/>
+	
+	<!-- 
+	Указываем путь к папке, где находится webtasks.xml.
+	Например, если файлы располагаются в папке build текущего проекта, то путь
+	должен выглядеть вот так:
+	<property name="webtasks.dir" value="${basedir}/build" />
+	-->
+	<property name="webtasks.dir" value="${basedir}" />
+	
+	<!-- 
+	Если собираемся использовать логгер, то обязательно определяем свойство
+	webtasks.log-file
+	-->
+	<property name="webtasks.log-file" value="${basedir}/test/libs.log" />
+	
+	<!-- Где хранятся исходники CSS и JS -->
+	<property name="js-src" value="${basedir}/test/js-src" />
+	<property name="css-src" value="${basedir}/test/css-src" />
+	
+	<!-- Куда сохранять результат -->
+	<property name="js" value="${basedir}/test/js" />
+	<property name="css" value="${basedir}/test/css" />
+	
+	<!-- 
+	Сборку проекта лучше разбивать на отдельные подзадачи и вызывать их через
+	аггрегирующую задачу с помощью атрибута depends. Эта аггрегирующая задача,
+	в том числе, должна инициализировать webtasks самым первым вызовом. 
+	-->
+	<target name="init" depends="webtasks.init, make-js, make-css">
+		
+		<!-- 
+		Если лог-файл нужен в формате xml, то после того, как отработали все
+		подзадачи по сборке проекта, принудительно делаем конвертацию лог-файла
+		-->
+		<convert-log-to-xml webroot="${basedir}/test" dest="${basedir}/test/libs.xml" src="${webtasks.log-file}"/>
+		<echo>Build done.</echo>
+	</target>
+	
+	<!-- Пример сборки JS-файлов -->
+	<target name="make-js">
+		<mkdir dir="${js}"/>
+		
+		<!-- Сжимаем один файл (JS или CSS) -->
+		<compress-single-file file="${js-src}/file1.js" todir="${js}"/>
+		
+		<!-- Сжимаем несколько файлов в одну библиотеку -->
+		<compress-js-lib tofile="${js}/lib.js">
+			<filelist dir="${js-src}">
+				<file name="file1.js"/>
+				<file name="file2.js"/>
+			</filelist>
+		</compress-js-lib>
+		
+		<!-- Сжимаем несколько файлов в одну библиотеку с ведением лога файлов -->
+		<compress-js-lib-log tofile="${js}/lib.js">
+			<filelist dir="${js-src}">
+				<file name="file1.js"/>
+				<file name="file2.js"/>
+			</filelist>
+		</compress-js-lib-log>
+	</target>
+	
+	<!-- Пример сборки CSS-файлов -->
+	<target name="make-css">
+		<mkdir dir="${css}"/>
+		
+		<!--
+		Так как в CSS есть родной метод подключения внешних файлов (через @include),
+		то просто натравливаем сборщик на папку, чтобы он сжал все файлы,
+		находящиеся в ней
+		-->
+		<compress-css dir="${css-src}" todir="${css}"/>
+	</target>
+	
+</project>
