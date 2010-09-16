@@ -19,15 +19,14 @@ h3. @<compress-js-lib tofile="/path/to/result.js" force="true|false">...</compre
 Склеивает и минифицирует через YUICompressor набор JS-файлов в один файл. Список файлов указывается врутри вызова задачи. Так же, как и в @<compress-css/>@ проверяются даты модификации исходных и минифицированных файлов, экономя время и ресурсы при сборке.
 
 Пример вызова:
-```xml
-<compress-js-lib tofile="${js}/lib.js">
-	<filelist dir="${js-src}">
-		<file name="file1.js"/>
-		<file name="file2.js"/>
-	</filelist>
-</compress-js-lib>
-</code></pre>
-```
+==<pre><code>
+&lt;compress-js-lib tofile=&quot;${js}/lib.js&quot;&gt;
+	&lt;filelist dir=&quot;${js-src}&quot;&gt;
+		&lt;file name=&quot;file1.js&quot;/&gt;
+		&lt;file name=&quot;file2.js&quot;/&gt;
+	&lt;/filelist&gt;
+&lt;/compress-js-lib&gt;
+</code></pre>==
 
 h3. @<compress-js-lib-log tofile="/path/to/result.js" force="true|false">...</compress-js-lib-log>@
 
@@ -47,15 +46,15 @@ file:/project/js/compiled-lib2.js
 
 То есть путь к минифицированному файлу, а под ним — список исходных файлов, отбитых символом табуляции. Этот текстовый файл можно сконвертировать в xml-формат с помощью задачи @<convert-log-to-xml/>@ (см. @webtasks-example.xml@). XML-файл выглягит так:
 
-```xml
-<files>
-	<file src="/js/compiled-lib1.js">
-		<file src="/js-src/file1.js"/>
-		<file src="/js-src/file2.js"/>
-	</file>
-	<file src="/js/compiled-lib2.js">
-		<file src="/js-src/file3.js"/>
-		<file src="/js-src/file4.js"/>
-	</file>
-</files>
-```
+==<pre><code>
+&lt;files&gt;
+	&lt;file src=&quot;/js/compiled-lib1.js&quot;&gt;
+		&lt;file src=&quot;/js-src/file1.js&quot;/&gt;
+		&lt;file src=&quot;/js-src/file2.js&quot;/&gt;
+	&lt;/file&gt;
+	&lt;file src=&quot;/js/compiled-lib2.js&quot;&gt;
+		&lt;file src=&quot;/js-src/file3.js&quot;/&gt;
+		&lt;file src=&quot;/js-src/file4.js&quot;/&gt;
+	&lt;/file&gt;
+&lt;/files&gt;
+</code></pre>==
