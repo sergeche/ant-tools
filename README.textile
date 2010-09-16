@@ -2,33 +2,33 @@ webtasks.xml — набор Ant-сценариев для сборки веб-п
 
 h2. Список задач
 
-h3. @<compress-css dir="/path/to/source/" todir="/path/to/result/" force="true|false">@
+h3. &lt;compress-css dir=&quot;/path/to/source/&quot; todir=&quot;/path/to/result/&quot; force=&quot;true | false&quot;&gt;
 
-Минифицирует все CSS-файлы в папке @dir@, сохраняя результат в папку @todir@. Если исходный файл не менялся, то минифицированная версия заново не генерируется, что экономит ресурсы и время при сборке. Можно принудительно генерировать минифицированную версию, указав атрибут @force="true"@.
+Минифицирует все CSS-файлы в папке @dir@, сохраняя результат в папку @todir@. Если исходный файл не менялся, то минифицированная версия заново не создаётся, что экономит ресурсы и время при сборке. Можно принудительно генерировать минифицированную версию, указав атрибут @force="true"@.
 
 Особенностью этой этой задачи является замена ссылок ==<code>@import url(_file.css)</code>== на содержимое подключаемого файла. Причём заменяются только те файлы, имя которых начинается с символа подчёркивания. Например, скрипт заменит ссылку ==<code>@import url(_file.css)</code>==, но ==<code>@import url(file.css)</code>== останется как есть.
 
 Пока поддерживается только один уровень вложенности импортов, то есть ссылка ==<code>@import url(_file2.css)</code>== внутри файла @_file.css@ не будет заменена.
 
-h3. @<compress-single-file file="/path/to/file.js" todir="/path/to dir/" />@
+h3. &lt;compress-single-file file=&quot;/path/to/file.js&quot; todir=&quot;/path/to dir/&quot; /&gt;
 
 Минифицирует один СSS или JS-файл @file@ и сохраняет результат в папке @todir@
 
-h3. @<compress-js-lib tofile="/path/to/result.js" force="true|false">...</compress-js-lib>@
+h3. &lt;compress-js-lib tofile=&quot;/path/to/result.js&quot; force=&quot;true | false&quot;&gt;...&lt;/compress-js-lib&gt;
 
 Склеивает и минифицирует через YUICompressor набор JS-файлов в один файл. Список файлов указывается врутри вызова задачи. Так же, как и в @<compress-css/>@ проверяются даты модификации исходных и минифицированных файлов, экономя время и ресурсы при сборке.
 
 Пример вызова:
-==<pre><code>
-&lt;compress-js-lib tofile=&quot;${js}/lib.js&quot;&gt;
-	&lt;filelist dir=&quot;${js-src}&quot;&gt;
-		&lt;file name=&quot;file1.js&quot;/&gt;
-		&lt;file name=&quot;file2.js&quot;/&gt;
-	&lt;/filelist&gt;
-&lt;/compress-js-lib&gt;
-</code></pre>==
+```xml
+<compress-js-lib tofile="${js}/lib.js">
+	<filelist dir="${js-src}">
+		<file name="file1.js"/>
+		<file name="file2.js"/>
+	</filelist>
+</compress-js-lib>
+```
 
-h3. @<compress-js-lib-log tofile="/path/to/result.js" force="true|false">...</compress-js-lib-log>@
+h3. &lt;compress-js-lib-log tofile=&quot;/path/to/result.js&quot; force=&quot;true | false&quot;&gt;...&lt;/compress-js-lib-log&gt;
 
 То же самое, что и @<compress-js-lib/>@, но ведёт лог файлов, из которых состоит сжатый JS-файл.
 
@@ -46,15 +46,15 @@ file:/project/js/compiled-lib2.js
 
 То есть путь к минифицированному файлу, а под ним — список исходных файлов, отбитых символом табуляции. Этот текстовый файл можно сконвертировать в xml-формат с помощью задачи @<convert-log-to-xml/>@ (см. @webtasks-example.xml@). XML-файл выглягит так:
 
-==<pre><code>
-&lt;files&gt;
-	&lt;file src=&quot;/js/compiled-lib1.js&quot;&gt;
-		&lt;file src=&quot;/js-src/file1.js&quot;/&gt;
-		&lt;file src=&quot;/js-src/file2.js&quot;/&gt;
-	&lt;/file&gt;
-	&lt;file src=&quot;/js/compiled-lib2.js&quot;&gt;
-		&lt;file src=&quot;/js-src/file3.js&quot;/&gt;
-		&lt;file src=&quot;/js-src/file4.js&quot;/&gt;
-	&lt;/file&gt;
-&lt;/files&gt;
-</code></pre>==
+```xml
+<files>
+	<file src="/js/compiled-lib1.js">
+		<file src="/js-src/file1.js"/>
+		<file src="/js-src/file2.js"/>
+	</file>
+	<file src="/js/compiled-lib2.js">
+		<file src="/js-src/file3.js"/>
+		<file src="/js-src/file4.js"/>
+	</file>
+</files>
+```
