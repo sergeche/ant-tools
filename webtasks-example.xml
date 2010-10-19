@@ -73,7 +73,7 @@
 		то просто натравливаем сборщик на папку, чтобы он сжал все файлы,
 		находящиеся в ней
 		-->
-		<compress-css dir="${css-src}" todir="${css}"/>
+		<compress-css dir="${css-src}" todir="${css}" exclude="**/exclude.css"/>
 	</target>
 	
 </project>

@@ -50,11 +50,13 @@
 		<attribute name="dir"/>
 		<attribute name="todir"/>
 		<attribute name="force" default="false"/>
+		<attribute name="exclude" default=""/>
 		<sequential>
 			<cssGlueRunner todir="@{todir}" force="@force">
 				<fileset dir="@{dir}">
 					<include name="**/*.css"/>
 					<exclude name="**/_*.css"/>
+					<exclude name="@{exclude}"/>
 				</fileset>
 			</cssGlueRunner>
 		</sequential>
@@ -70,6 +72,7 @@
 		<attribute name="dir"/>
 		<attribute name="todir"/>
 		<attribute name="force" default="false"/>
+		<attribute name="exclude" default=""/>
 		<sequential>
 			<tempfile property="webtasks.temp-file"/>
 			<tstamp>
@@ -77,7 +80,7 @@
 			</tstamp>
 			
 			<touch file="${webtasks.temp-file}" datetime="${webtasks.touch-time}" />
-			<cssGlue dir="@{dir}" todir="@{todir}" force="@{force}"/>
+			<cssGlue dir="@{dir}" todir="@{todir}" force="@{force}" exclude="@{exclude}"/>
 			
 			<!--
 				Проходимся по всем файлам и проверяем, поменялась ли их дата модификации.
