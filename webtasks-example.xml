@@ -62,6 +62,14 @@
 				<file name="file2.js"/>
 			</filelist>
 		</compress-js-lib-log>
+		
+		<!-- Сжимаем несколько файлов в одну библиотеку (Closure Compiler) с ведением лога файлов -->
+		<compress-js-lib-log tofile="${js}/lib-cc.js" use-cc="true">
+			<filelist dir="${js-src}">
+				<file name="file1.js"/>
+				<file name="file2.js"/>
+			</filelist>
+		</compress-js-lib-log>
 	</target>
 	
 	<!-- Пример сборки CSS-файлов -->

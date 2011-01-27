@@ -115,6 +115,7 @@
 		<attribute name="tofile"/>
 		<attribute name="force" default="false"/>
 		<attribute name="devdir" default="false"/>
+		<attribute name="use-cc" default="false"/>
 		<element name="files" implicit="true"/>
 		<sequential>
 			<!-- Using ant contrib -->
@@ -145,7 +146,7 @@
 					</if>
 					
 					<dirname file="@{tofile}" property="webtasks.temp-js-dir"/>
-					<compress-single-file file="@{tofile}" todir="${webtasks.temp-js-dir}" />
+					<compress-single-file file="@{tofile}" todir="${webtasks.temp-js-dir}" use-cc="@{use-cc}" />
 					<var name="webtasks.temp-js-dir" unset="true"/>
 				</then>
 			</if>
@@ -155,6 +156,23 @@
 	<macrodef name="compress-single-file" description="Сжимает один файл @file через YUICompressor и сохраняет результат в директории @todir">
 		<attribute name="file"/>
 		<attribute name="todir"/>
+		<attribute name="use-cc" default="false"/>
+		<sequential>
+			<if>
+				<istrue value="@{use-cc}"/>
+				<then>
+					<compress-single-file-cc file="@{file}" todir="@{todir}" />
+				</then>
+				<else>
+					<compress-single-file-yui file="@{file}" todir="@{todir}" />
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="compress-single-file-yui" description="Сжимает один файл @file через YUICompressor и сохраняет результат в директории @todir">
+		<attribute name="file"/>
+		<attribute name="todir"/>
 		<sequential>
 			<yuicompress linebreak="5000" warn="false" munge="yes" preserveallsemicolons="true" outputfolder="@{todir}">
 				<fileset file="@{file}"/>
@@ -162,14 +180,31 @@
 		</sequential>
 	</macrodef>
 	
-	<macrodef name="compress-js-lib-log" description="То же самое, что и &lt;compress-js-lib&gt;, только вед1т лог файлов, участвовавших к сжатии">
+	<macrodef name="compress-single-file-cc" description="Сжимает один файл @file через Closure Compiler и сохраняет результат в директории @todir">
+		<attribute name="file"/>
+		<attribute name="todir"/>
+		<sequential>
+			<basename file="@{file}" property="cc-filename"/>
+			<dirname file="@{file}" property="cc-dirname"/>
+			<cc-compress compilationlevel="simple" debug="false" output="@{todir}/${cc-filename}">
+				<sources dir="${cc-dirname}">
+					<file name="${cc-filename}"/>
+				</sources>
+			</cc-compress>
+			<var name="cc-filename" unset="true"/>
+			<var name="cc-dirname" unset="true"/>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="compress-js-lib-log" description="То же самое, что и &lt;compress-js-lib&gt;, только ведёт лог файлов, участвовавших к сжатии">
 		<attribute name="tofile"/>
 		<attribute name="force" default="false"/>
 		<attribute name="devdir" default="false"/>
+		<attribute name="use-cc" default="false"/>
 		<element name="file-list" implicit="true" />
 		
 		<sequential>
-			<compress-js-lib tofile="@{tofile}" force="@{force}" devdir="@{devdir}">
+			<compress-js-lib tofile="@{tofile}" force="@{force}" devdir="@{devdir}" use-cc="@{use-cc}">
 				<file-list/>
 			</compress-js-lib>
 			
